@@ -69,6 +69,49 @@ class Usuario{
         
     }
     /*
+     Funcao publica que retorna uma lista com todos os usuarios
+    */
+    public static function getList(){
+        $sql = new Sql();
+        //
+        return $sql->select("SELECT * FROM tb_usuario ORDER BY deslogin;");
+    }
+    //Funcao para buscar um usuario com base nos caracteres passados como parametros
+    public static function search($login){        
+        $sql = new Sql();
+        
+        return $sql->select("SELECT * FROM tb_usuario WHERE deslogin LIKE :SEARCH ORDER BY deslogin", array(
+            ':SEARCH'=>"%".$login."%"
+        ));
+    }
+    
+    public function login($login, $senha){
+        $sql = new Sql();
+        //o returno do select sera um array.
+        
+        $results = $sql->select("SELECT * FROM tb_usuario WHERE deslogin = :LOGIN AND dessenha = :PASSWORD", array(
+            ":LOGIN"=>$login,
+            ":PASSWORD"=>$senha
+        ));
+        //Aqui fazemos uma verificação para ver se a consulta do banco returnou algum resultado
+        if(count($results)> 0){            
+            $row = $results[0];
+            /*
+            se retornar fazemos a atribuicao com os metodos setters
+            na instancia da classe Usuarios utilizada
+            */
+            $this->setIdusuario($row["idusuario"]);
+            $this->setLogin($row["deslogin"]);
+            $this->setSenha($row["dessenha"]);
+            $this->setDataCadastro(new DateTime($row['dtcadastro']));
+        }else{
+            /*
+            Caso a consulta nao retorne nada enviamos uma mensagem para o usuario.
+            */
+            throw new exception("Login e/ou senha Inválidos!");
+        }
+    }
+    /*
     Esta funcao é uma funcao que chamamos de metodo magico, ela transformara os atributos da instancia 
     em string e retornada em formato json pois estamos utilizando o metodo json_encode() nativo do PHP
     */
