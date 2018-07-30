@@ -139,6 +139,18 @@ class Usuario{
             ':ID'=>$this->getIdusuario()
         ));
     }
+    public function delete(){
+        $sql = new Sql();
+        
+        $sql->query("DELETE FROM tb_usuario WHERE idusuario = :ID", array(
+            ':ID'=>$this->getIdusuario()
+        ));
+        
+        $this->setIdusuario(0);
+        $this->setLogin("");
+        $this->setSenha("");
+        $this->setDataCadastro(new DateTime());
+    }
     /*
         Este é o metodo construtor que recebe doi parametros o novo login e a nova senha, sendo que eles nao sao obrigatorios visto que caso nao seja passado sera vazio
     */

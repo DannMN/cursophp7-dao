@@ -37,6 +37,11 @@ $aluno = new Usuario("jorge", "dfs221");
 $aluno->insert();
 echo $aluno;
 */
+
+/*
+
+
+ALTERAR UM USUARIO
 $usuario = new Usuario();
 
 $usuario->loadById(4);
@@ -44,6 +49,23 @@ $usuario->loadById(4);
 $usuario->update('Gisele','1234');
 
 echo $usuario;
+
+*/
+
+$usuario = new Usuario();
+
+$usuario->loadById(9);
+
+echo $usuario."Antes de deletar <br>";
+
+$usuario->delete();
+
+
+echo $usuario."Apos deletar";
+
+
+
+
 ?>
 
 
