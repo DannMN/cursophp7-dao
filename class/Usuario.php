@@ -51,15 +51,13 @@ class Usuario{
         ));
         //Aqui fazemos uma verificação para ver se a consulta do banco returnou algum resultado
         if(count($results)> 0){            
-            $row = $results[0];
+
             /*
             se retornar fazemos a atribuicao com os metodos setters
             na instancia da classe Usuarios utilizada
             */
-            $this->setIdusuario($row["idusuario"]);
-            $this->setLogin($row["deslogin"]);
-            $this->setSenha($row["dessenha"]);
-            $this->setDataCadastro(new DateTime($row['dtcadastro']));
+            $this->setData($results[0]);
+           
         }else{
             /*
             Caso a consulta nao retorne nada enviamos uma mensagem para o usuario.
@@ -95,21 +93,58 @@ class Usuario{
         ));
         //Aqui fazemos uma verificação para ver se a consulta do banco returnou algum resultado
         if(count($results)> 0){            
-            $row = $results[0];
+
             /*
             se retornar fazemos a atribuicao com os metodos setters
             na instancia da classe Usuarios utilizada
             */
-            $this->setIdusuario($row["idusuario"]);
-            $this->setLogin($row["deslogin"]);
-            $this->setSenha($row["dessenha"]);
-            $this->setDataCadastro(new DateTime($row['dtcadastro']));
+            
+            $this->setData($results[0]);
         }else{
             /*
             Caso a consulta nao retorne nada enviamos uma mensagem para o usuario.
             */
             throw new exception("Login e/ou senha Inválidos!");
         }
+    }
+    //Esta funcao atribui os valores recebidos aos atributos da classe
+    public function setData($data){            
+            $this->setIdusuario($data["idusuario"]);
+            $this->setLogin($data["deslogin"]);
+            $this->setSenha($data["dessenha"]);
+            $this->setDataCadastro(new DateTime($data['dtcadastro']));        
+    }
+    //Esta funcao inseri um usuario na tabela atraves de uma procedure chamada sp_usuarios_insert
+    public function insert(){
+        
+        $sql = new Sql();
+        
+        $results = $sql->select("CALL sp_usuarios_insert(:LOGIN, :PASSWORD)", array(
+            ':LOGIN'=>$this->getLogin(),
+            ':PASSWORD'=>$this->getSenha()
+        ));
+        if(count($results) > 0){
+            $this->setData($results[0]);
+        }
+    }
+    public function update($login, $senha){
+        $this->setLogin($login);
+        $this->setSenha($senha);
+        
+        $sql = new Sql();
+        
+        $sql->query("UPDATE tb_usuario SET deslogin = :LOGIN, dessenha = :PASSWORD WHERE idusuario = :ID", array(
+            ':LOGIN'=>$this->getLogin(),
+            ':PASSWORD'=>$this->getSenha(),
+            ':ID'=>$this->getIdusuario()
+        ));
+    }
+    /*
+        Este é o metodo construtor que recebe doi parametros o novo login e a nova senha, sendo que eles nao sao obrigatorios visto que caso nao seja passado sera vazio
+    */
+    public function __construct($login = "", $senha = ""){        
+        $this->setLogin($login);
+        $this->setSenha($senha);
     }
     /*
     Esta funcao é uma funcao que chamamos de metodo magico, ela transformara os atributos da instancia 

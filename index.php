@@ -25,10 +25,51 @@ echo $root;
 //echo json_encode($search);
 
 //carrega um usuario usando o login e a senha
-
+/*
 $usuario = new Usuario();
 
 $usuario->login("daniel","102030");
 
+echo $usuario;*/
+/*
+//Criando um novo usuario
+$aluno = new Usuario("jorge", "dfs221");
+$aluno->insert();
+echo $aluno;
+*/
+$usuario = new Usuario();
+
+$usuario->loadById(4);
+
+$usuario->update('Gisele','1234');
+
 echo $usuario;
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
